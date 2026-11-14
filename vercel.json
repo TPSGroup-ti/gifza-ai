@@ -1,0 +1,11 @@
+
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/studio", "destination": "/app.html" },
+    { "source": "/pricing", "destination": "/pricing.html" },
+    { "source": "/api-docs", "destination": "/api.html" }
+  ]
+}
+
