@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gifza AI - Pricing & Membership</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Prompt', sans-serif; } </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- NAVBAR -->
+    <nav class="bg-slate-900/80 border-b border-slate-800 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="location.href='index.html'">
+            <span class="bg-gradient-to-r from-violet-600 to-cyan-500 p-2.5 rounded-2xl text-white font-bold shadow-lg shadow-violet-500/30">⚡ GIFZA</span>
+            <span class="font-bold text-xl tracking-tight text-white">Gifza Pricing</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="index.html" class="hover:text-violet-400 transition">หน้าแรก</a>
+            <a href="app.html" class="hover:text-violet-400 transition">สตูดิโอ (Studio)</a>
+            <a href="pricing.html" class="text-violet-400 font-semibold transition">แพ็กเกจราคา</a>
+            <a href="api.html" class="hover:text-violet-400 transition">API & Token</a>
+        </div>
+    </nav>
+
+    <!-- PRICING CONTAINER -->
+    <main class="flex-grow max-w-6xl mx-auto p-6 md:p-12 space-y-12 w-full">
+        <div class="text-center space-y-3">
+            <h1 class="text-4xl font-extrabold text-white">แพ็กเกจค่าบริการระดับโปร</h1>
+            <p class="text-slate-400 text-sm">เลือกแพ็กเกจที่เหมาะกับการใช้งานระบบ Gifza AI ของพ่อครับ</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Free Plan -->
+            <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl space-y-6 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <span class="bg-slate-800 text-slate-300 text-xs px-3 py-1 rounded-full font-semibold">Free</span>
+                    <h3 class="text-3xl font-bold text-white">0 ฿</h3>
+                    <p class="text-xs text-slate-400">สำหรับทดลองใช้งานพื้นฐานทั่วไป</p>
+                    <ul class="space-y-2 text-sm text-slate-300 pt-2">
+                        <li>✔️ ตัดตารางสติกเกอร์พื้นฐาน</li>
+                        <li>✔️ ดาวน์โหลดทีละรูป</li>
+                        <li>❌ ไม่รองรับ API Access</li>
+                    </ul>
+                </div>
+                <button onclick="alert('คุณใช้งานแพ็กเกจ Free อยู่แล้วครับพ่อ')" class="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-xl text-sm font-semibold transition">ใช้งานปัจจุบัน</button>
+            </div>
+
+            <!-- Standard Pro -->
+            <div class="bg-slate-900 border border-violet-500/80 p-8 rounded-3xl space-y-6 flex flex-col justify-between relative shadow-2xl shadow-violet-500/10">
+                <div class="absolute -top-3 right-6 bg-violet-600 text-white text-xs px-3 py-1 rounded-full font-bold">ยอดนิยม</div>
+                <div class="space-y-4">
+                    <span class="bg-violet-900/60 text-violet-300 text-xs px-3 py-1 rounded-full font-semibold">Standard Pro</span>
+                    <h3 class="text-3xl font-bold text-violet-400">299 ฿ <span class="text-xs text-slate-400 font-normal">/เดือน</span></h3>
+                    <p class="text-xs text-slate-400">ตัดตาราง 6x5 ไม่จำกัด พร้อมดาวน์โหลด ZIP</p>
+                    <ul class="space-y-2 text-sm text-slate-300 pt-2">
+                        <li>✔️ ตัดตารางสติกเกอร์ 6x5 ไม่จำกัด</li>
+                        <li>✔️ ดาวน์โหลดรวบยอด ZIP ทันที</li>
+                        <li>✔️ ระบบสร้าง GIF อนิเมชันเต็มรูปแบบ</li>
+                    </ul>
+                </div>
+                <button onclick="openCheckout('Standard Pro', 299)" class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white py-3 rounded-xl text-sm font-semibold shadow-lg shadow-violet-600/30 transition">ชำระเงิน 299 ฿</button>
+            </div>
+
+            <!-- Enterprise API -->
+            <div class="bg-slate-900 border border-amber-500/80 p-8 rounded-3xl space-y-6 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <span class="bg-amber-900/60 text-amber-300 text-xs px-3 py-1 rounded-full font-semibold">Enterprise</span>
+                    <h3 class="text-3xl font-bold text-amber-400">999 ฿ <span class="text-xs text-slate-400 font-normal">/เดือน</span></h3>
+                    <p class="text-xs text-slate-400">สำหรับนักพัฒนาและเชื่อมต่อระบบภายนอก</p>
+                    <ul class="space-y-2 text-sm text-slate-300 pt-2">
+                        <li>✔️ ฟีเจอร์ Pro ทั้งหมด</li>
+                        <li>✔️ Full REST API Access</li>
+                        <li>✔️ ระบบ Token ส่วนตัวไม่จำกัด</li>
+                    </ul>
+                </div>
+                <button onclick="openCheckout('Enterprise API', 999)" class="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:opacity-90 text-white py-3 rounded-xl text-sm font-semibold shadow-lg shadow-amber-600/30 transition">สมัครแพ็กเกจ Enterprise</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white">ชำระเงินค่าบริการ</h3>
+                <button onclick="document.getElementById('checkout-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">✕</button>
+            </div>
+            <p class="text-sm text-slate-300">แพ็กเกจ: <span id="modal-plan" class="font-bold text-violet-400">Pro</span></p>
+            <p class="text-sm text-slate-300">ยอดชำระ: <span id="modal-price" class="font-bold text-emerald-400">299 ฿</span></p>
+            <button onclick="alert('ชำระเงินสำเร็จ! อัปเกรดสถานะบัญชีเรียบร้อยครับพ่อ'); document.getElementById('checkout-modal').classList.add('hidden');" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold shadow-lg">ยืนยันการชำระเงินผ่าน QR PromptPay</button>
+        </div>
+    </div>
+
+    <footer class="bg-slate-900/90 border-t border-slate-800 py-6 px-6 text-center text-xs text-slate-500">
+        &copy; 2026 Gifza AI Platform. Powered by Vela Core Engine.
+    </footer>
+
+    <script>
+        function openCheckout(plan, price) {
+            document.getElementById('modal-plan').innerText = plan;
+            document.getElementById('modal-price').innerText = price + ' ฿';
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
 
