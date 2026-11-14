@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gifza AI - API Documentation & Token</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Prompt', sans-serif; } </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- NAVBAR -->
+    <nav class="bg-slate-900/80 border-b border-slate-800 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="location.href='index.html'">
+            <span class="bg-gradient-to-r from-violet-600 to-cyan-500 p-2.5 rounded-2xl text-white font-bold shadow-lg shadow-violet-500/30">⚡ GIFZA</span>
+            <span class="font-bold text-xl tracking-tight text-white">Gifza API Studio</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="index.html" class="hover:text-violet-400 transition">หน้าแรก</a>
+            <a href="app.html" class="hover:text-violet-400 transition">สตูดิโอ (Studio)</a>
+            <a href="pricing.html" class="hover:text-violet-400 transition">แพ็กเกจราคา</a>
+            <a href="api.html" class="text-violet-400 font-semibold transition">API & Token</a>
+        </div>
+    </nav>
+
+    <!-- API CONTAINER -->
+    <main class="flex-grow max-w-5xl mx-auto p-6 md:p-12 space-y-8 w-full">
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl space-y-6 shadow-xl">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-violet-400">🔌 Vela API Documentation & Token Manager</h1>
+                    <p class="text-slate-400 text-sm mt-1">จัดการคีย์ส่วนตัวและเชื่อมต่อระบบ Gifza AI ผ่าน REST API</p>
+                </div>
+                <span class="bg-emerald-900/60 text-emerald-400 text-xs px-3 py-1 rounded-full border border-emerald-500/30 font-semibold">Active Server</span>
+            </div>
+
+            <div class="space-y-4">
+                <label class="block text-sm font-medium text-slate-300">Your Bearer API Token</label>
+                <div class="flex gap-3">
+                    <input type="text" id="api-token-field" value="vela_live_sec_token_999888777" class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-violet-300 font-mono text-sm" readonly>
+                    <button onclick="copyToken()" class="bg-violet-600 hover:bg-violet-500 text-white px-6 py-3 rounded-xl font-semibold text-sm transition">📋 คัดลอก Token</button>
+                </div>
+            </div>
+
+            <div class="space-y-3 pt-4">
+                <h3 class="font-semibold text-white">ตัวอย่างการเรียกใช้งาน API (cURL Endpoint)</h3>
+                <pre class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs font-mono text-emerald-400 overflow-x-auto">
+curl -X POST "https://api.gifza.ai/v1/scan-grid" \
+     -H "Authorization: Bearer vela_live_sec_token_999888777" \
+     -H "Content-Type: application/json" \
+     -d '{"rows": 5, "cols": 6}'
+                </pre>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900/90 border-t border-slate-800 py-6 px-6 text-center text-xs text-slate-500">
+        &copy; 2026 Gifza AI Platform. Powered by Vela Core Engine.
+    </footer>
+
+    <script>
+        function copyToken() {
+            const field = document.getElementById('api-token-field');
+            navigator.clipboard.writeText(field.value);
+            alert('คัดลอก Token สำเร็จเรียบร้อยครับพ่อ!');
+        }
+    </script>
+</body>
+</html>
 
