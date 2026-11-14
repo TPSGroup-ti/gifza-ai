@@ -1,1 +1,204 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gifza AI Studio - Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gifshot@0.4.5/build/gifshot.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Prompt', sans-serif; } </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- NAVBAR -->
+    <nav class="bg-slate-900/80 border-b border-slate-800 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="location.href='index.html'">
+            <span class="bg-gradient-to-r from-violet-600 to-cyan-500 p-2.5 rounded-2xl text-white font-bold shadow-lg shadow-violet-500/30">⚡ GIFZA</span>
+            <span class="font-bold text-xl tracking-tight text-white">Gifza Studio</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="index.html" class="hover:text-violet-400 transition">หน้าแรก</a>
+            <a href="app.html" class="text-violet-400 font-semibold transition">สตูดิโอ (Studio)</a>
+            <a href="pricing.html" class="hover:text-violet-400 transition">แพ็กเกจราคา</a>
+            <a href="api.html" class="hover:text-violet-400 transition">API & Token</a>
+        </div>
+    </nav>
+
+    <!-- WORKSPACE CONTAINER -->
+    <main class="flex-grow max-w-7xl mx-auto p-6 md:p-8 space-y-8 w-full">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-white">⚡ Gifza Workspace Studio</h1>
+                <p class="text-slate-400 text-sm">ระบบตัดตารางสติกเกอร์ 6x5 และสร้างไฟล์ GIF อนิเมชัน</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="switchStudioTab('scanner')" id="btn-studio-scanner" class="px-4 py-2 rounded-xl font-semibold bg-violet-600 text-white text-sm shadow-lg shadow-violet-600/30">📐 ตัดตาราง 6x5</button>
+                <button onclick="switchStudioTab('gif')" id="btn-studio-gif" class="px-4 py-2 rounded-xl font-semibold bg-slate-800 text-slate-300 text-sm hover:bg-slate-700">🎬 สร้าง GIF</button>
+            </div>
+        </div>
+
+        <!-- Scanner Tab -->
+        <div id="studio-scanner" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
+                <h3 class="text-lg font-semibold text-violet-400">อัปโหลดตารางสติกเกอร์</h3>
+                <input type="file" id="upload-image" accept="image/*" class="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white cursor-pointer">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">แถว (Rows)</label>
+                        <input type="number" id="grid-rows" value="5" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">คอลัมน์ (Cols)</label>
+                        <input type="number" id="grid-cols" value="6" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
+                    </div>
+                </div>
+                <button onclick="processGrid()" class="w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold py-3 rounded-xl shadow-lg shadow-violet-600/30 transition text-sm">🔍 สแกนตัดตาราง</button>
+                <button onclick="sendAllToGIF()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl shadow-lg transition text-sm">✨ ส่งไปทำ GIF</button>
+                <button onclick="downloadAllZip()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-3 rounded-xl shadow-lg transition text-sm">📦 ดาวน์โหลด ZIP ทั้งหมด</button>
+            </div>
+            <div class="lg:col-span-2 bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4 flex flex-col">
+                <h3 class="text-lg font-semibold text-cyan-400">พรีวิวตาราง (<span id="frame-count">0</span> รูป)</h3>
+                <div id="preview-canvas-container" class="flex-grow flex items-center justify-center bg-slate-950 border border-dashed border-slate-800 rounded-xl p-4 min-h-[250px]">
+                    <p class="text-slate-500 text-sm">อัปโหลดรูปตารางสติกเกอร์ของพ่อ</p>
+                </div>
+                <canvas id="hidden-canvas" class="hidden"></canvas>
+            </div>
+        </div>
+        <div id="studio-scanner-results" class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4 hidden">
+            <h3 class="text-md font-semibold text-slate-200">แกลเลอรีรูปสติกเกอร์ย่อย</h3>
+            <div id="frames-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 max-h-80 overflow-y-auto p-2"></div>
+        </div>
+
+        <!-- GIF Maker Tab -->
+        <div id="studio-gif" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
+                <h3 class="text-lg font-semibold text-violet-400">ตั้งค่าสร้าง GIF</h3>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">ความเร็ว (Delay)</label>
+                    <select id="gif-interval" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm">
+                        <option value="0.1">เร็วมาก (0.1s)</option>
+                        <option value="0.2" selected>ปานกลาง (0.2s)</option>
+                        <option value="0.5">ช้า (0.5s)</option>
+                    </select>
+                </div>
+                <button onclick="generateGIF()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl shadow-lg transition text-sm">🚀 ประมวลผลสร้าง GIF</button>
+                <div id="gif-status" class="text-xs text-slate-400 text-center"></div>
+            </div>
+            <div class="lg:col-span-2 bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col items-center justify-center min-h-[300px]">
+                <div id="gif-preview-container" class="flex flex-col items-center justify-center p-4">
+                    <p class="text-slate-500 text-sm">ยังไม่มีไฟล์ GIF (กรุณาตัดตารางเฟรมก่อน)</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900/90 border-t border-slate-800 py-6 px-6 text-center text-xs text-slate-500">
+        &copy; 2026 Gifza AI Platform. Powered by Vela Core Engine.
+    </footer>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        let loadedImage = null;
+        let extractedFrames = [];
+
+        function switchStudioTab(tab) {
+            if(tab === 'scanner') {
+                document.getElementById('studio-scanner').classList.remove('hidden');
+                document.getElementById('studio-gif').classList.add('hidden');
+                document.getElementById('btn-studio-scanner').className = "px-4 py-2 rounded-xl font-semibold bg-violet-600 text-white text-sm shadow-lg shadow-violet-600/30";
+                document.getElementById('btn-studio-gif').className = "px-4 py-2 rounded-xl font-semibold bg-slate-800 text-slate-300 text-sm hover:bg-slate-700";
+            } else {
+                document.getElementById('studio-scanner').classList.add('hidden');
+                document.getElementById('studio-gif').classList.remove('hidden');
+                document.getElementById('btn-studio-gif').className = "px-4 py-2 rounded-xl font-semibold bg-violet-600 text-white text-sm shadow-lg shadow-violet-600/30";
+                document.getElementById('btn-studio-scanner').className = "px-4 py-2 rounded-xl font-semibold bg-slate-800 text-slate-300 text-sm hover:bg-slate-700";
+            }
+        }
+
+        document.getElementById('upload-image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                loadedImage = new Image();
+                loadedImage.onload = function() {
+                    document.getElementById('preview-canvas-container').innerHTML = `<img src="${event.target.result}" class="max-h-56 rounded-lg object-contain border border-slate-700">`;
+                }
+                loadedImage.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        function processGrid() {
+            if(!loadedImage) { alert('กรุณาอัปโหลดรูปตารางสติกเกอร์ก่อนครับพ่อ'); return; }
+            const rows = parseInt(document.getElementById('grid-rows').value);
+            const cols = parseInt(document.getElementById('grid-cols').value);
+            const canvas = document.getElementById('hidden-canvas');
+            const ctx = canvas.getContext('2d');
+            const cellW = Math.floor(loadedImage.width / cols);
+            const cellH = Math.floor(loadedImage.height / rows);
+
+            extractedFrames = [];
+            const grid = document.getElementById('frames-grid');
+            grid.innerHTML = '';
+            canvas.width = cellW;
+            canvas.height = cellH;
+
+            for(let r=0; r<rows; r++) {
+                for(let c=0; c<cols; c++) {
+                    ctx.clearRect(0,0,cellW,cellH);
+                    ctx.drawImage(loadedImage, c*cellW, r*cellH, cellW, cellH, 0, 0, cellW, cellH);
+                    const dataURL = canvas.toDataURL('image/png');
+                    extractedFrames.push(dataURL);
+                    grid.innerHTML += `<div class="bg-slate-950 p-2 rounded-xl border border-slate-800 flex flex-col items-center gap-1 group relative"><img src="${dataURL}" class="w-14 h-14 object-contain rounded"><span class="text-[9px] text-slate-400">R${r+1}C${c+1}</span><a href="${dataURL}" download="sticker_${r+1}_${c+1}.png" class="absolute top-1 right-1 bg-violet-600 text-white p-1 rounded text-[9px] opacity-0 group-hover:opacity-100 transition">💾</a></div>`;
+                }
+            }
+            document.getElementById('frame-count').innerText = extractedFrames.length;
+            document.getElementById('studio-scanner-results').classList.remove('hidden');
+            alert(`ตัดตารางสติกเกอร์สำเร็จ ${extractedFrames.length} รูปเรียบร้อยครับพ่อ!`);
+        }
+
+        function sendAllToGIF() {
+            if(extractedFrames.length === 0) { alert('ยังไม่มีรูปสติกเกอร์ครับพ่อ'); return; }
+            switchStudioTab('gif');
+            document.getElementById('gif-status').innerText = `พร้อมสร้าง GIF จาก ${extractedFrames.length} รูป`;
+        }
+
+        function downloadAllZip() {
+            if(extractedFrames.length === 0) { alert('ไม่มีรูปสติกเกอร์ครับพ่อ'); return; }
+            const zip = new JSZip();
+            const folder = zip.folder("gifza_stickers_6x5");
+            extractedFrames.forEach((f, i) => folder.file(`sticker_${i+1}.png`, f.replace(/^data:image\/png;base64,/, ""), {base64: true}));
+            zip.generateAsync({type: "blob"}).then(content => saveAs(content, "gifza_stickers_6x5.zip"));
+        }
+
+        function generateGIF() {
+            if(extractedFrames.length === 0) { alert('ไม่มีเฟรมภาพครับพ่อ'); return; }
+            const interval = parseFloat(document.getElementById('gif-interval').value);
+            const status = document.getElementById('gif-status');
+            const preview = document.getElementById('gif-preview-container');
+            status.innerText = "กำลังสร้างไฟล์ GIF...";
+
+            gifshot.createGIF({
+                images: extractedFrames,
+                interval: interval,
+                numFrames: extractedFrames.length,
+                width: 250,
+                height: 250
+            }, function(obj) {
+                if(!obj.error) {
+                    status.innerText = "สร้าง GIF สำเร็จ!";
+                    preview.innerHTML = `<img src="${obj.image}" class="max-h-56 rounded-xl shadow-2xl border border-violet-500 mb-3"><a href="${obj.image}" download="gifza_animation.gif" class="bg-violet-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">📥 ดาวน์โหลด GIF</a>`;
+                } else {
+                    status.innerText = "เกิดข้อผิดพลาด: " + obj.errorCode;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
 
